@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configurable Interval Timer</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        #timerScreen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            transition: background-color 0.3s;
+            position: relative;
+            color: white;
+        }
+
+        #intervalStatus {
+            font-size: 75px;
+            margin-bottom: 20px;
+        }
+
+        #intervalTime {
+            font-size: 200px;
+        }
+
+        #totalTime {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 75px;
+        }
+    </style>
+</head>
+<body>
+    <div id="timerScreen">
+        <div id="intervalStatus">Pause</div>
+        <div id="intervalTime">00:00</div>
+        <div id="totalTime">00:00</div>
+    </div>
+
+    <script>
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function pad(value) {
+            return value.toString().padStart(2, '0');
+        }
+
+        var firstIntervalDuration = parseInt(getQueryParam('firstInterval')) || 60; // Default to 60 seconds
+        var secondIntervalDuration = parseInt(getQueryParam('secondInterval')) || 120; // Default to 120 seconds
+        var firstIntervalText = getQueryParam('firstText') || 'Pause'; // Default to 'Pause'
+        var secondIntervalText = getQueryParam('secondText') || 'Training'; // Default to 'Training'
+        var firstIntervalColor = getQueryParam('firstColor') || 'blue'; // Default to blue
+        var secondIntervalColor = getQueryParam('secondColor') || 'green'; // Default to green
+        var currentInterval = 1;
+        var totalElapsedTime = 0;
+
+        function updateIntervalStatusAndColor() {
+            var statusText = currentInterval === 1 ? firstIntervalText : secondIntervalText;
+            var color = currentInterval === 1 ? firstIntervalColor : secondIntervalColor;
+            document.getElementById("intervalStatus").textContent = statusText;
+            document.getElementById("timerScreen").style.backgroundColor = color;
+        }
+
+        function startTimer() {
+            var duration = currentInterval === 1 ? firstIntervalDuration : secondIntervalDuration;
+            var intervalTime = document.getElementById("intervalTime");
+            var totalTime = document.getElementById("totalTime");
+
+            updateIntervalStatusAndColor();
+            
+            var timer = setInterval(function() {
+                totalElapsedTime++;
+                var minutes = Math.floor(duration / 60);
+                var seconds = duration % 60;
+                var totalElapsedMinutes = Math.floor(totalElapsedTime / 60);
+                var totalElapsedSeconds = totalElapsedTime % 60;
+
+                intervalTime.textContent = `${pad(minutes)}:${pad(seconds)}`;
+                totalTime.textContent = `${pad(totalElapsedMinutes)}:${pad(totalElapsedSeconds)}`;
+
+                if (duration <= 0) {
+                    clearInterval(timer);
+                    currentInterval = currentInterval === 1 ? 2 : 1;
+                    updateIntervalStatusAndColor();
+                    startTimer(); // Start the next interval
+                }
+
+                duration--;
+            }, 1000);
+        }
+
+        startTimer(); // Start the timer when the page loads
+    </script>
+</body>
+</html>
