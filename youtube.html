@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Collection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .album {
+            min-height: 50vh;
+            padding-bottom: 3rem;
+        }
+
+        .card {
+            margin-bottom: 2rem;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 225px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>My Video Collection</strong>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main role="main">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-12">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search for titles...">
+            </div>
+        </div>
+    </div>
+
+    <section class="album py-5 bg-light">
+        <div class="container">
+            <div class="row" id="videoContainer">
+                <!-- Videos will be loaded here -->
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const videos = [
+        {
+            "title": "Faszienrolle Video Title",
+            "url": "https://youtu.be/My2bDatVNOQ?si=BIya_NUlrX7KfCSO",
+            "thumbnail": "https://img.youtube.com/vi/My2bDatVNOQ/0.jpg"
+        },
+        {
+            "title": "Bellicon Video 1 Title",
+            "url": "https://youtu.be/7HsaM7rS_Yk?si=KsZ_1EhU7m9eMBT7",
+            "thumbnail": "https://img.youtube.com/vi/7HsaM7rS_Yk/0.jpg"
+        },
+        {
+            "title": "Bellicon Video 2 Title",
+            "url": "https://youtu.be/1E8Pi6EOdDs?si=D5WbHbnCAj0jcJFi",
+            "thumbnail": "https://img.youtube.com/vi/1E8Pi6EOdDs/0.jpg"
+        }
+        // ...add more videos here if needed...
+    ];
+
+    function displayVideos(videosToShow) {
+        const container = document.getElementById('videoContainer');
+        container.innerHTML = ''; // Clear existing content
+        videosToShow.forEach(video => {
+            const videoElement = `
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <a href="${video.url}" target="_blank">
+                            <img class="card-img-top" src="${video.thumbnail}" alt="${video.title}">
+                        </a>
+                        <div class="card-body">
+                            <p class="card-text">${video.title}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += videoElement;
+        });
+    }
+
+    function searchVideos() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const filteredVideos = videos.filter(video => video.title.toLowerCase().includes(searchTerm));
+        displayVideos(filteredVideos);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', searchVideos);
+
+    window.onload = () => displayVideos(videos);
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
